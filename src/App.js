@@ -8,23 +8,42 @@ import About from './components/About/About'
 import Detail from './components/Detail/Detail'
 import Form from './components/Form/Form'
 import Favorites from './components/Favorites/Favorites'
+import axios from 'axios'
 
 function App () {
   const { pathname }= useLocation()
   const  navigate  = useNavigate()
   const [characters, setCharacters]= useState([])
   const [access, setAccess]= useState(false)
-  const username = "bautista.zitelli11@gmail.com"
-  const password = "ejemplo123"
+  const URL = 'http://localhost:3001/rickandmorty/login/';
 
 
-
-  function login(userData) {
-    if (userData.username === username && userData.password === password) {
-       setAccess(true);
-       navigate('/home');
+ async function login(userData) {
+   try {
+      const { username, password } = userData;
+      const {data} =await axios(URL + `?email=${username}&password=${password}`)
+   
+        const { access } = data;
+        setAccess(access);
+        access && navigate('/home');
+    
+    } catch (error) {
+      console.log(error.message);
     }
+    
+    
+    
  }
+//   function login(userData) {
+//     const { username, password } = userData;
+//     const URL = 'http://localhost:3001/rickandmorty/login/';
+//     axios(URL + `?email=${username}&password=${password}`)
+//     .then(({ data }) => {
+//        const { access } = data;
+//        setAccess(access);
+//        access && navigate('/home');
+//     });
+//  }
 
  function logout (){
   setAccess(false);
@@ -35,21 +54,32 @@ function App () {
   !access && navigate('/');
 }, [access]);
 
-  const onSearch= (character)=>{
-    fetch(`https://rickandmortyapi.com/api/character/${character}`)
-    .then((response) => response.json())
-    .then((data) => {
+  const onSearch= async (id)=>{
+    try {
+      const {data}= await axios(`http://localhost:3001/rickandmorty/character/${id}`)
+      
        if (data.name) {
-          setCharacters((oldChars) => [...oldChars, data]);
-       } else {
-          window.alert('No hay personajes con ese ID');
-       }
-    });
-
+          setCharacters((oldChars) => [...oldChars, data]);  
+      }
+    } catch(error) {
+      alert('No hay personajes con ese ID');
+    }
   }
 
+  // const onSearch=(id)=>{
+  //   fetch(`http://localhost:3001/rickandmorty/character/${id}`)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //      if (data.name) {
+  //         setCharacters((oldChars) => [...oldChars, data]);
+  //      } else {
+  //         window.alert('No hay personajes con ese ID');
+  //      }
+  //   });
+  // }
+
   const onClose =(id)=>{
-    setCharacters(characters.filter(char=> char.id!== id))
+    setCharacters(characters.filter(char=> char.id !== id))
   }
 
 

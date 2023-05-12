@@ -9,19 +9,34 @@ const reducer = (state = initialState, { type, payload }) => {
     switch (type) {
         case ADD_FAVORITE:
             return {
-                ...state, 
-                    myFavorites: [...state.allCharacters, payload],
-                    allCharacters:[...state.allCharacters, payload] 
-                };
+                ...state,
+                myFavorites: payload,
+                allCharacters: payload 
+            };
+
         case REMOVE_FAVORITE :
-            const filtered = state.allCharacters.filter((char) => {
-            return char.id !== Number(payload);
-        });
-            return { 
-            ...state,
-            myFavorites: [...filtered],
-            allCharacters:[...filtered] 
-        };
+            return{
+                ...state,
+                myFavorites:payload
+            }
+            
+            // return {
+            //     ...state,
+            //     myFavorites: state.myFavorites.filter((e, i)=> i !== payload.id)
+                
+            // };
+            // return { 
+            //     ...state, 
+            //     myFavorites: payload, 
+            //     allCharacters:payload
+            // };
+
+            // case REMOVE_WINE_FROM_FAVORITES:
+            //     return {
+            //       ...state,
+            //       favorites: state.favorites.filter((e, i) => i !== action.payload.id),
+            //     }
+
         case FILTER:
             let copy = [...state.allCharacters];
             if (payload === 'All'){
@@ -35,16 +50,7 @@ const reducer = (state = initialState, { type, payload }) => {
                      myFavorites: filtro
                 }
             }
-            // case 'FILTER':
-            // let copy3 = [...state.allCharacters];
-            // if(payload === 'all'){
-            //     return { ...state, myFavorites: copy3 };
-            // } else {
-            //     let filtro = [...state.allCharacters].filter((char) => {
-            //         return char.gender === payload
-            //     });
-            //     return { ...state, myFavorites: filtro };
-            // }
+
         case ORDER:
             const ordered = [...state.allCharacters]
             const orderedChars = ordered.sort((a,b)=>{

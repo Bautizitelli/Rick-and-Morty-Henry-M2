@@ -12,6 +12,7 @@ export function Card(props) {
    const handleFavorite = () => {
       isFav ? removeFav(props.id) : addFav(props);
       setIsFav(!isFav);
+      
    }
 
    useEffect(() => {
@@ -21,6 +22,7 @@ export function Card(props) {
          }
       });
    }, [myFavorites])
+   
    return (
       <div className={styles.styleContainer}>
           {
@@ -67,7 +69,3 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Card);
-
-  
-
-
